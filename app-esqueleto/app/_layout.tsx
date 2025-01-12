@@ -1,12 +1,13 @@
-import { Stack, usePathname, Slot } from "expo-router";
-import { useEffect, useState } from "react";
-import LoadingScreen from "./Loading";
-import BottomBar from "../components/layout/bottombar/BottomBar";
-import { View, StyleSheet } from "react-native";
+import { NavigationContainer } from '@react-navigation/native';  // Importando o NavigationContainer
+import { Stack, usePathname, Slot } from 'expo-router';
+import { useEffect, useState } from 'react';
+import LoadingScreen from './Loading';
+import BottomBar from '../components/layout/bottombar/BottomBar';
+import { View, StyleSheet } from 'react-native';
 import { onAuthStateChangedListener } from '../config/authService';
-import { User } from "firebase/auth";
+import { User } from 'firebase/auth';
 
-import "../global.css";
+import '../global.css';
 
 export default function RootLayout() {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,28 +38,31 @@ export default function RootLayout() {
   const shouldShowBottomBar = screensWithBottomBar.includes(pathname);
 
   return (
-    <View style={styles.container}>
-      <Stack>
-        <Stack.Screen
-          name={isAuthenticated ? "index" : "Login"}
-          options={
-            isAuthenticated
-              ? { headerLeft: () => null }
-              : { header: () => null }
-          }
-        />
-        <Stack.Screen name="Register" options={{ headerLeft: () => null }} />
-        <Stack.Screen name="PrivacyPolicy" options={{ header: () => null }} />
-        <Stack.Screen name="TermsOfUse" options={{ header: () => null }} />
-        <Stack.Screen name="ForgotPassword" options={{ header: () => null }} />
-        <Stack.Screen name="Profile" options={{ headerLeft: () => null }} />
+    // Envolvendo tudo com o NavigationContainer
+    <NavigationContainer>
+      <View style={styles.container}>
+        <Stack>
+          <Stack.Screen
+            name={isAuthenticated ? "index" : "Login"}
+            options={
+              isAuthenticated
+                ? { headerLeft: () => null }
+                : { header: () => null }
+            }
+          />
+          <Stack.Screen name="Register" options={{ headerLeft: () => null }} />
+          <Stack.Screen name="PrivacyPolicy" options={{ header: () => null }} />
+          <Stack.Screen name="TermsOfUse" options={{ header: () => null }} />
+          <Stack.Screen name="ForgotPassword" options={{ header: () => null }} />
+          <Stack.Screen name="Profile" options={{ headerLeft: () => null }} />
 
-        {/* O Slot vai ser renderizado aqui, se algum componente filho for passado para essa tela */}
-        <Slot />
-      </Stack>
+          {/* O Slot vai ser renderizado aqui, se algum componente filho for passado para essa tela */}
+          <Slot />
+        </Stack>
 
-      {shouldShowBottomBar && <BottomBar />}
-    </View>
+        {shouldShowBottomBar && <BottomBar />}
+      </View>
+    </NavigationContainer>
   );
 }
 
